@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Panel</title>
+  <style>
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ingresar variables y almacenar en el vector de caracteres:</h1>
+  <form id="solapa2Form">
+    <label for="dato1">Dato1:</label>
+    <input type="text" name="dato1" id="Dato1" required><br>
+
+    <label for="dato2">Dato2:</label>
+    <input type="text" name="dato2" id="Dato2" required><br>
+
+    <label for="dato3">Dato3:</label>
+    <input type="text" name="dato3" id="Dato3" required><br>
+
+    <button type="button" onclick="guardarDato('Dato1')">Guardar Solapa1</button>
+    <button type="button" onclick="guardarDato('Dato2')">Guardar Solapa2</button>
+    <button type="button" onclick="guardarDato('Dato3')">Guardar Solapa3</button>
+    <button type="button" onclick="eliminarTodo()">Eliminar Todo</button>
+  </form>
+
+  <h2>Vector DatoLink:</h2>
+  <ul id="vectorDatoLink">
+  </ul>
+
+  <script>
+    var DatosLink = obtenerVectorDatoLink();
+
+    function guardarDato(dato) {
+      var valor = document.getElementById(dato).value;
+      var posicion;
+
+      switch (dato) {
+        case 'Dato1':
+          posicion = 0;
+          break;
+        case 'Dato2':
+          posicion = 1;
+          break;
+        case 'Dato3':
+          posicion = 2;
+          break;
+      }
+
+      DatosLink[posicion] = valor;
+      guardarVectorDatoLink(DatosLink);
+      actualizarListaDatoLink();
+    }
+
+    function borrarElemento(index) {
+      DatosLink[index] = "";
+      guardarVectorDatoLink(DatosLink);
+      actualizarListaDatoLink();
+    }
+
+    function eliminarTodo() {
+      DatosLink = ["", "", ""];
+      guardarVectorDatoLink(DatosLink);
+      actualizarListaDatoLink();
+    }
+
+    function obtenerVectorDatoLink() {
+      var vectorDatoLink = JSON.parse(localStorage.getItem('vector_dato_link'));
+      return vectorDatoLink ? vectorDatoLink : ["", "", ""];
+    }
+
+    function guardarVectorDatoLink(vectorDatoLink) {
+      localStorage.setItem('vector_dato_link', JSON.stringify(vectorDatoLink));
+    }
+
+    function actualizarListaDatoLink() {
+      var listaDatoLink = document.getElementById("vectorDatoLink");
+      listaDatoLink.innerHTML = "";
+
+      DatosLink.forEach(function (item, index) {
+        if (item !== "") {
+          var li = document.createElement("li");
+          li.textContent = item;
+          listaDatoLink.appendChild(li);
+
+          var button = document.createElement("button");
+          button.textContent = "Eliminar";
+          button.onclick = function () {
+            borrarElemento(index);
+          };
+          li.appendChild(button);
+        }
+      });
+    }
+
+    // Actualizar lista de DatoLink al cargar la página
+    actualizarListaDatoLink();
+  </script>
+</body>
+</html>

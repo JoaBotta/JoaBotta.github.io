@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> 1</title>
+</head>
+<body>
+  <h1>Ingresar valores:</h1>
+  <form>
+  
+    <label for="A">A (GRUPO):</label>
+    <input type="number" name="A" id="A" value="" required><br>
+
+    <label for="B">B (ORDEN):</label>
+    <input type="number" name="B" id="B" value="" required><br>
+
+    <label for="C">C (CUIL/CUIT):</label>
+    <input type="number" name="C" id="C" value="" required><br>
+
+    <label for="D">D (COD CONC):</label>
+    <input type="number" name="D" id="D" value=""><br>
+
+    <button type="button" onclick="validarCamposYAbrirEnlace()">Ejecutar</button>
+  </form>
+
+  {% if ultima_posicion_lista %}
+    <p>Última posición del vector de caracteres:</p>
+    <a href="#" onclick="abrirEnlace(); return false;" target="_blank" rel="noopener noreferrer" id="enlace">
+      {{ ultima_posicion_lista }}
+    </a>
+  {% else %}
+    <p>No hay datos ingresados en el vector.</p>
+  {% endif %}
+
+  <script>
+    function abrirEnlace() {
+      var enlace = document.getElementById("enlace").innerText;
+      window.open(enlace, "_blank");
+    }
+
+    function validarCamposYAbrirEnlace() {
+      var A = document.getElementById("A").value;
+      var B = document.getElementById("B").value;
+      var C = document.getElementById("C").value;
+      var D = document.getElementById("D").value;
+
+      if (A.trim() === "" || B.trim() === "" || C.trim() === "") {
+        alert("Por favor, complete todos los campos obligatorios.");
+      } else {
+        var vectorCaracteres = "{{ ultima_posicion_lista|default_if_none:'' }}";
+        vectorCaracteres = vectorCaracteres.replace(/amp;/g, ""); // Eliminar todas las ocurrencias de "amp;"
+        vectorCaracteres = vectorCaracteres.replace("A", A.toString().padStart(6, "0"));
+        vectorCaracteres = vectorCaracteres.replace("B", B.toString().padStart(4, "0"));
+        vectorCaracteres = vectorCaracteres.replace("C", C.toString());
+        vectorCaracteres = vectorCaracteres.replace("D", D.toString());
+
+        document.getElementById("enlace").setAttribute("href", vectorCaracteres);
+        document.getElementById("enlace").innerText = vectorCaracteres;
+      }
+    }
+  </script>
+</body>
+</html>

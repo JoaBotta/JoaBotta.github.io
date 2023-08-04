@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Solapa 1</title>
+</head>
+<body>
+  <h1>Ingresar valores:</h1>
+  <form>
+    <label for="A">A (GRUPO):</label>
+    <input type="text" name="A" id="A" value="" required><br>
+
+    <label for="B">B (ORDEN):</label>
+    <input type="text" name="B" id="B" value="" required><br>
+
+    <label for="C">C (CUIL/CUIT):</label>
+    <input type="text" name="C" id="C" value="" required><br>
+
+    <label for="D">D (COD CONC):</label>
+    <input type="text" name="D" id="D" value=""><br>
+
+    <button type="button" onclick="mostrarValoresDatoLink()">Ejecutar</button>
+  </form>
+
+  <h2>Vector de caracteres:</h2>
+  <ul id="vectorCaracteres">
+  </ul>
+
+  <script>
+    function mostrarValoresDatoLink() {
+      var A = document.getElementById("A").value;
+      var B = document.getElementById("B").value;
+      var C = document.getElementById("C").value;
+      var D = document.getElementById("D").value;
+
+      if (A.trim() === "" || B.trim() === "" || C.trim() === "") {
+        alert("Por favor, complete todos los campos obligatorios.");
+      } else {
+        var vectorDatoLink = obtenerVectorDatoLink();
+
+        // Obtener el valor de la posición 0 de la lista DatoLink
+        var posicion0 = vectorDatoLink[0];
+
+        // Reemplazar los caracteres "A", "B", "C" y "D" con los valores ingresados por el usuario
+        posicion0 = posicion0.replace("A", A.toString().padStart(6, "0"));
+        posicion0 = posicion0.replace("B", B.toString().padStart(4, "0"));
+        posicion0 = posicion0.replace("C", C);
+        posicion0 = posicion0.replace("D", D);
+
+        // Abrir una nueva ventana emergente con la URL modificada
+        var urlModificada = posicion0;
+        window.open(urlModificada, "_blank");
+      }
+    }
+
+    function obtenerVectorDatoLink() {
+      var vectorDatoLink = JSON.parse(localStorage.getItem('vector_dato_link'));
+      return vectorDatoLink ? vectorDatoLink : ["", "", ""];
+    }
+
+    function mostrarValorPosicion1(vectorCaracteres) {
+      var posicion1 = vectorCaracteres[0];
+      var listaElementos = document.getElementById("vectorCaracteres");
+      listaElementos.innerHTML = "";
+
+      if (posicion1) {
+        var li = document.createElement("li");
+        li.textContent = posicion1;
+        listaElementos.appendChild(li);
+      } else {
+        var li = document.createElement("li");
+        li.textContent = "No hay datos ingresados en la posición 1 de la lista.";
+        listaElementos.appendChild(li);
+      }
+    }
+
+    // Actualizar lista de caracteres al cargar la página
+    mostrarValorPosicion1(obtenerVectorDatoLink());
+  </script>
+</body>
+</html>
